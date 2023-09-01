@@ -2,6 +2,7 @@ source libs/details.sh
 
 function _desable_swap () {
 	_title "DESABILITANDO O SWAP"
+
 	echo -e "${COR_CIANO}Desabilitando o swap${COR_RESET}"
 		sudo swapoff -a && \
 		_line_long
@@ -32,13 +33,14 @@ function _desable_swap () {
 
 function _install_containerd () {
 	_title "INSTALANDO O CONTAINERD"
-		echo -e "${COR_CIANO}Instalando as depedências${COR_RESET}"
+
+		echo -e "${COR_CIANO}Instalando as depedências!${COR_RESET}"
 		_line_long
 		sudo apt install -y curl gnupg software-properties-common apt-transport-https ca-certificates && \
 		_line_long
 		sleep 1
 
-	echo -e "${COR_CIANO}Habilitando o repositório do Docker${COR_RESET}"
+	echo -e "${COR_CIANO}Habilitando o repositório do Docker!${COR_RESET}"
 		_line_long
 		sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg && \
 		sleep 1
@@ -47,13 +49,13 @@ function _install_containerd () {
 		sleep 1
 		_line_long
 
-	echo -e "${COR_CIANO}Instalando o containerd${COR_RESET}"
+	echo -e "${COR_CIANO}Instalando o containerd!${COR_RESET}"
 		_line_long
 		sudo apt install containerd.io -y && \
 		sleep 1
 		_line_long
 
-	echo -e "${COR_CIANO}Configurando o containerd para que inicie usando o systemd como cgroup${COR_RESET}"
+	echo -e "${COR_CIANO}Configurando o containerd para que inicie usando o systemd como cgroup!${COR_RESET}"
 		sudo containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1 && \
 		_line_long
 		sleep 1
@@ -61,7 +63,7 @@ function _install_containerd () {
 		_line_long
 		sleep 1
 
-	echo -e "${COR_CIANO}Reiniciando e habilitando o serviço do Containerd${COR_RESET}"
+	echo -e "${COR_CIANO}Reiniciando e habilitando o serviço do Containerd!${COR_RESET}"
 		sudo systemctl restart containerd && \
 		_line_long
 		sleep 1
@@ -72,7 +74,7 @@ function _install_containerd () {
 
 function _add_kubernetes_repo () {
 	_title "ADD REPOSITÓRIO DO KUBERNETES"
-	echo -e "${COR_CIANO}Adicionando chave no sistema${COR_RESET}"
+	echo -e "${COR_CIANO}Adicionando chave no sistema!${COR_RESET}"
 		_line_long
 		sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B53DC80D13EDEF05
 		_line_long
@@ -84,7 +86,7 @@ function _add_kubernetes_repo () {
 		_line_long
 		sleep 1
 		
-	echo -e "${COR_CIANO}Atualizando o sistema${COR_RESET}"
+	echo -e "${COR_CIANO}Atualizando o sistema!${COR_RESET}"
 		_line_long
 		sudo apt update
 		sleep 1
@@ -92,7 +94,8 @@ function _add_kubernetes_repo () {
 
 function _install_kubelet () {
 	_title "INSTALANDO O KUBELET"
-	echo -e "${COR_CIANO}Instalando o Kubelet${COR_RESET}"
+
+	echo -e "${COR_CIANO}Instalando o Kubelet!${COR_RESET}"
 		_line_long
 		sudo apt install -y kubelet && \
 		_line_long
@@ -104,7 +107,8 @@ function _install_kubelet () {
 
 function _install_kubeadm () {
 	_title "INSTALANDO O KUBEADM"
-	echo -e "${COR_CIANO}Instalando o Kubeadm${COR_RESET}"
+
+	echo -e "${COR_CIANO}Instalando o Kubeadm!${COR_RESET}"
 		_line_long
 		sudo apt install -y kubeadm && \
 		_line_long
@@ -116,7 +120,8 @@ function _install_kubeadm () {
 
 function _install_kubectl () {
 	_title "INSTALANDO O KUBECTL"
-	echo -e "${COR_CIANO}Instalando o Kubectl${COR_RESET}"
+
+	echo -e "${COR_CIANO}Instalando o Kubectl!${COR_RESET}"
 		_line_long
 		sudo apt install -y kubectl && \
 		_line_long

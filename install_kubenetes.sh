@@ -3,13 +3,13 @@
 # install_kubenetes.sh - Instalação do Kubernetes no Ubuntu 22.04 LTS
 #
 # Autor: Erik Nathan | GitHub: @eriknathan
-# ------------------------------------------------------------------------ #
+# ------------------------------------------------------------------------- #
 # Descrição:
 #  --------------------------------------------------------------
 #  Observações:
 #    Para automatizar o script rode o comando <./install_kubenetes.sh -a ou --alias>
-#	  e em seguida <source ~/.bashrc> no seu terminal.
-#	  Agora você só precisa chamar o nome <kube> no terminal que ele já vai aparecer!
+#	 e em seguida <source ~/.bashrc> no seu terminal.
+#	 Agora você só precisa chamar o nome <kube> no terminal que ele já vai aparecer!
 #  --------------------------------------------------------------
 #  Comandos:
 #  	 $ ./install_kubenetes.sh ou kube
@@ -23,7 +23,7 @@
 # 	 │   ├── functions_deps.sh - funções de dependências
 # 	 │   └── functions_main.sh - funções principais
 #    ├── install_kubenetes.sh - script principal
-# 	 └── Vagrantfile - Script para subir VM no Virutal Box
+# 	 └── Vagrantfile - Script para subir 3 VMs no Virutal Box, sendo uma Master e duas Workers
 #  --------------------------------------------------------------
 #  Erros:
 #    - Caso de erro na chave na hora de adicionar o repositório do Kubernetes, roda esse comando:
@@ -32,18 +32,18 @@
 #		/proc/sys/net/ipv4/ip_forward não está definido como 1, o que é necessário para que o
 # 		Kubernetes funcione corretamente! Para resolver, entre no user root (sudo su) e rode esse comando:
 # 		<echo "1" > /proc/sys/net/ipv4/ip_forward>
-# ------------------------------------------------------------------------ #
+# ------------------------------------------------------------------------- #
 # Testado em:
 #   bash 5.1.16
-# ------------------------------------------------------------------------ #
+# ------------------------------------------------------------------------- #
 
-# ------------------------------- IMPORTAÇÕES ----------------------------------------- #
+# -------------------------------- IMPORTAÇÕES -------------------------------- #
 source libs/functions_deps.sh
 source libs/functions_main.sh
 source libs/details.sh
-# ------------------------------------------------------------------------ #
+# ------------------------------------------------------------------------- #
 
-# ------------------------------- FUNÇÃO ----------------------------------------- #
+# -------------------------------- FUNÇÕES -------------------------------- #
 function trapped () {
 	echo -e "${COR_VERMELHO}Erro na linha $1${COR_RESET}"
 	exit 1
@@ -133,9 +133,9 @@ function install_kubernetes () {
 done
 
 }
-# ------------------------------------------------------------------------ #
+# ------------------------------------------------------------------------- #
 
-# ------------------------------- EXECUÇÃO ----------------------------------------- #
+# -------------------------------- EXECUÇÃO -------------------------------- #
 while [ -n "$1" ]; do
 	case "$1" in
 		-m|--menu)                install_kubernetes;   exit ;;
