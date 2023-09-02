@@ -1,16 +1,80 @@
 source libs/details.sh
 
+function _cni () {
+	_title "ESCOLHENDO A CNI DO KUBERNETES"
+	
+	echo -e "${COR_CIANO}Escolha qual CNI você quer usar: ${COR_RESET}"
+	echo -e "${COR_VERDE}1.${COR_RESET} Flannel"
+	echo -e "${COR_VERDE}2.${COR_RESET} Calico"
+
+	_line_long
+	read -p "Opção: " cni	
+	sleep 1
+
+	if [ "$cni" == "1" ]; then
+		echo -e "${COR_CIANO}Flannel...${COR_RESET}"
+		NETWORK_CIDR="10.244.0.0/16"
+		sleep 1
+		_line_long
+		kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+		_line_long
+
+	elif [ "$cni" == "2" ]; then
+		echo -e "${COR_CIANO}Calico...${COR_RESET}"
+		NETWORK_CIDR="192.168.0.0/16"
+		sleep 1
+		_line_long
+		sudo kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+		_line_long
+	else
+		echo "Opção inválida. Escolha 1 para Flannel ou 2 para Calico."
+	fi
+}
+
 function _start () {
 	_title "INICIANDO O CLUSTER"
 
 	echo -e "${COR_CIANO}Criando o Cluster via Kubeadm!${COR_RESET}"
 		_line_long
 		sleep 1
+		echo -e "${COR_CIANO}Interfaces de rede do sistema:${COR_RESET}"
+		ip -4 -o addr show | awk '{print $2 ":", $4}' | cut -d '/' -f 1
+		_line_long
 		read -p "Digite o IP Address que a API serve vai está escutando: " IP_ADDRESS
 		_line_long
-		echo -e "${COR_CIANO}Criando o Cluster...${COR_RESET}"
+
+	echo -e "${COR_CIANO}Escolha qual CNI você quer usar!${COR_RESET}"
 		_line_long
-		sudo kubeadm init --apiserver-advertise-address $IP_ADDRESS --pod-network-cidr 192.168.0.0/16
+		echo -e "${COR_VERDE}1.${COR_RESET} Flannel"
+		echo -e "${COR_VERDE}2.${COR_RESET} Calico"
+		
+		_line_long
+		read -p "Opção: " cni	
+		_line_long
+		sleep 1
+
+		if [ "$cni" == "1" ]; then
+			echo -e "${COR_CIANO}Flannel...${COR_RESET}"
+			NETWORK_CIDR="10.244.0.0/16"
+			sleep 1
+			_line_long
+			kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+			_line_long
+		elif [ "$cni" == "2" ]; then
+			echo -e "${COR_CIANO}Calico...${COR_RESET}"
+			NETWORK_CIDR="192.168.0.0/16"
+			sleep 1
+			_line_long
+			sudo kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+			_line_long
+		else
+			echo "Opção inválida. Escolha 1 para Flannel ou 2 para Calico."
+		fi
+
+	echo -e "${COR_CIANO}Criando o Cluster...${COR_RESET}"
+		_line_long
+		echo -e "${COR_AMARELO}IP: $IP_ADDRESS | NETWORK_CIDR: $NETWORK_CIDR${COR_RESET}"
+		sudo kubeadm init --apiserver-advertise-address $IP_ADDRESS --pod-network-cidr $NETWORK_CIDR
 		_line_long
 		sleep 1
 
@@ -43,56 +107,12 @@ function _info () {
 		sleep 1
 }
 
-function _calico () {
-	_title "INICIALIZANDO A CNI DO CALICO"
-	
-	sleep 1
-	_line_long
-	sudo kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
-	_line_long
-	sleep 1
-}
-
-function _flannel () {
-	_title "INICIALIZANDO A CNI DO FLANNEL"
-
-	sleep 1
-	_line_long
-	kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-	_line_long
-	sleep 1
-}
-
-function _cni () {
-	_title "ESCOLHENDO A CNI DO KUBERNETES"
-	
-	echo -e "${COR_CIANO}Escolha qual CNI você quer usar: ${COR_RESET}"
-	echo -e "${COR_VERDE}1.${COR_RESET} Flannel"
-	echo -e "${COR_VERDE}2.${COR_RESET} Calico"
-
-	_line_long
-	read -p "Opção: " cni	
-	sleep 1
-
-	if [ "$cni" == "1" ]; then
-		echo -e "${COR_CIANO}Flannel...${COR_RESET}"
-		_line_long
-		_flannel
-	elif [ "$cni" == "2" ]; then
-		echo -e "${COR_CIANO}Calico...${COR_RESET}"
-		_line_long
-		_calico
-	else
-		echo "Opção inválida. Escolha 1 para Flannel ou 2 para Calico."
-	fi
-}
-
 function _generate_token () {
 	_title "GERAR TOKEN DE CONEXÃO COM O CLUSTER"
 
 	sleep 1
 	_line_long
-	echo Token: && sudo kubeadm token create --print-join-command
+	echo "Token (rodar como sudo):" && sudo kubeadm token create --print-join-command
 	_line_long
 	sleep 1
 }
@@ -187,7 +207,7 @@ Parâmetros aceitos:
   -t | --token             Token de conexão com workers.
   -w | --worker-down       Token de conexão com workers.
   -a | --alias             Chamar o script com 'kube' no terminal.
-  -c | --calico            Habilitar a comunição entre os pods no cluster.
+  -c | --cni               Escolher a CNI do Kubernetes.
   -h | --help              Menu de ajuda.
 "
 	sleep 1

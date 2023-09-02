@@ -52,6 +52,7 @@ trap 'trapped $LINENO' ERR
 
 # FUNÇÃO PRINCIPAL
 function install_kubernetes () {
+	sudo echo "1" > /proc/sys/net/ipv4/ip_forward
 	clear
 	while true; do
 		_title "SCRIPT DE INSTALAÇÃO DO KUBERNETES"
@@ -117,9 +118,9 @@ function install_kubernetes () {
 			_help
             ;;
 		8)
-            echo -e "${COR_VERDE}Saindo...${COR_RESET}"
-			source ~/.bashrc
+            echo -e "${COR_VERDE}Saindo...${COR_RESET}" && cd /home/$USER
 			sleep 1
+			clear
 			exit
             ;;
         *)
