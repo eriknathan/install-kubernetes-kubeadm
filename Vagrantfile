@@ -1,5 +1,6 @@
-# ubuntu/focal64 -> Ubuntu 20.04
-# ubuntu/bionic64 -> Ubuntu 18.04
+# generic/ubuntu2204 -> Ubuntu 22.04
+# ubuntu/focal64     -> Ubuntu 20.04
+# ubuntu/bionic64    -> Ubuntu 18.04
 
 Vagrant.configure("2") do |config|
     (1..1).each do |i|
