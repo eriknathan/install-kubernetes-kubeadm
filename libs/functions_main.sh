@@ -96,13 +96,13 @@ function _info () {
 	sleep 1
 	echo -e "${COR_CIANO}Informações do Cluster!${COR_RESET}"
 		_line_long
-		sudo kubectl cluster-info
+		kubectl cluster-info
 		_line_long
 		sleep 1
 
 	echo -e "${COR_CIANO}Listando Nodes do Cluster!${COR_RESET}"
 		_line_long
-		sudo kubectl get nodes
+		kubectl get nodes
 		_line_long
 		sleep 1
 }
@@ -174,19 +174,25 @@ function _alias () {
 	_line_long
 	sleep 1
 	
-	echo $SHELL_FILE
+	echo -e "${COR_VERDE}Arquivo de configuração do shell: $SHELL_FILE${COR_RESET}"
+	_line_long
+
+	DIR_ATUAL=$(pwd)
+	echo "O diretório atual é: $DIR_ATUAL"
 	_line_long
 
 	if [ -f $SHELL_FILE  ]; then
-		if grep -q "alias kube='cd /local_data && ./install_kubenetes.sh'" $SHELL_FILE; then
+		if grep -q "alias kube='cd $DIR_ATUAL && ./install_kubenetes.sh'" $SHELL_FILE; then
 			echo -e "${COR_VERMELHO}A linha já existe no arquivo $SHELL_FILE.${COR_RESET}"
 			_line_long
 			_help
 		else
-			echo "alias kube='cd /local_data && ./install_kubenetes.sh'" >> $SHELL_FILE
+			echo "alias kube='cd $DIR_ATUAL && ./install_kubenetes.sh'" >> $SHELL_FILE
 			echo -e "${COR_VERDE}Linha adicionada com sucesso ao $SHELL_FILE!${COR_RESET}"
+			grep -q "alias kube='cd $DIR_ATUAL && ./install_kubenetes.sh'" $SHELL_FILE
 			_line_long
-			echo -e "${COR_VERMELHO}Rode o comando <source $SHELL_FILE> no seu terminal!${COR_RESET}"
+			echo -e "${COR_CIANO}Rode o comando <source $SHELL_FILE> no seu terminal!${COR_RESET}"
+			_line_long
 		fi
 	else
 		echo -e "${COR_VERMELHO}O arquivo $SHELL_FILE não foi encontrado. Certifique-se de que ele existe.${COR_RESET}"

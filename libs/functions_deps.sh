@@ -4,6 +4,7 @@ function _desable_swap () {
 	_title "DESABILITANDO O SWAP"
 
 	echo -e "${COR_CIANO}Desabilitando o swap${COR_RESET}"
+		sleep 1
 		sudo swapoff -a && \
 		_line_long
 		sleep 1
